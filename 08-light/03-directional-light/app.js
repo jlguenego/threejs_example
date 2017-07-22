@@ -11,18 +11,8 @@
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	// add this to have more light
 	renderer.gammaOutput = true;
-
-	renderer.shadowMapEnabled = true;
-	renderer.shadowMapSoft = true;
-
-	renderer.shadowCameraNear = 0.1;
-	renderer.shadowCameraFar = 100;
-	renderer.shadowCameraFov = 50;
-
-	renderer.shadowMapBias = 0.0039;
-	renderer.shadowMapDarkness = 0.5;
-	renderer.shadowMapWidth = 1024;
-	renderer.shadowMapHeight = 1024;
+	// Valeur ajoutee: to have shadow on the plate. (Mandatory for directionalLight)
+	renderer.shadowMap.enabled = true;
 
 	document.body.prepend(renderer.domElement);
 
@@ -49,11 +39,12 @@
 	var plateM = new THREE.Mesh(plateG, material);
 	scene.add(plateM);
 
-	const cylinderG = new THREE.CylinderGeometry(0.2, 0.2, 5);
+	const cylinderG = new THREE.CylinderGeometry(0.2, 0.2, 1);
 	var cylinderM = new THREE.Mesh(cylinderG, material);
 	scene.add(cylinderM);
 
 	cylinderM.rotation.x += Math.PI / 2;
+	// cylinderM.position.set(0, 0, 0.5);
 
 	let angle = 180;
 
@@ -67,7 +58,6 @@
 
 
 		directionalLight.position.set(Math.cos(angle * Math.PI / 180), 1, Math.sin(angle * Math.PI / 180)).normalize();
-		// directionalLight.position.set(0, 1, 1).normalize();
 
 		renderer.render(scene, camera);
 		document.getElementById('info').innerText = 'angle = ' + angle.toFixed(2) + ' ' +
