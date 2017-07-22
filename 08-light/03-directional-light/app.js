@@ -9,12 +9,14 @@
 
 	const renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
-	// add this to have more light
 	renderer.gammaOutput = true;
-	// Valeur ajoutee: to have shadow on the plate. (Mandatory for directionalLight)
-	renderer.shadowMap.enabled = true;
-
 	document.body.prepend(renderer.domElement);
+
+	// Valeur ajoutee: to have shadow on the plate. (Mandatory for directionalLight)
+	console.log('renderer.shadowMap.enabled', renderer.shadowMap.enabled);
+	renderer.shadowMap.enabled = true; // allow shadow processing.
+	console.log('renderer.shadowMap.enabled', renderer.shadowMap.enabled);
+	renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -27,37 +29,45 @@
 
 	// Valeur ajoutee: directional Light.
 	const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+	directionalLight.castShadow = true;
+	directionalLight.shadow.mapSize.width = 512; // default
+	directionalLight.shadow.mapSize.height = 512; // default
+	directionalLight.shadow.camera.near = 0.1; // default
+	directionalLight.shadow.camera.far = 40; // default
 	scene.add(directionalLight);
 
 	// Helper
-	var helper = new THREE.DirectionalLightHelper(directionalLight, 50);
+	const helper = new THREE.CameraHelper(directionalLight.shadow.camera);
 	scene.add(helper);
 
-	const material = new THREE.MeshPhongMaterial({ color: 0xffffff, dithering: true });
+	const material = new THREE.MeshStandardMaterial({ color: 0xffffff, dithering: true });
 
 	const plateG = new THREE.BoxGeometry(3, 3, 0.2);
-	var plateM = new THREE.Mesh(plateG, material);
+	const plateM = new THREE.Mesh(plateG, material);
+	plateM.receiveShadow = true;
+	plateM.castShadow = true;
 	scene.add(plateM);
 
-	const cylinderG = new THREE.CylinderGeometry(0.2, 0.2, 1);
-	var cylinderM = new THREE.Mesh(cylinderG, material);
+	const cylinderG = new THREE.CylinderGeometry(0.2, 0.2, 1, 20);
+	const cylinderM = new THREE.Mesh(cylinderG, material);
+	cylinderM.receiveShadow = true;
+	cylinderM.castShadow = true;
+	cylinderM.rotation.x += Math.PI / 2;
+	cylinderM.position.z += 0.3;
 	scene.add(cylinderM);
 
-	cylinderM.rotation.x += Math.PI / 2;
-	// cylinderM.position.set(0, 0, 0.5);
-
 	let angle = 180;
-
-	directionalLight.castShadow = true;
-	cylinderM.castShadow = true;
-	plateM.receiveShadow = true;
 
 	function animate() {
 		requestAnimationFrame(animate);
 		angle -= 0.1;
 
 
-		directionalLight.position.set(Math.cos(angle * Math.PI / 180), 1, Math.sin(angle * Math.PI / 180)).normalize();
+		directionalLight.position.set(
+			20 * Math.cos(angle * Math.PI / 180),
+			20 * Math.sin(angle * Math.PI / 180),
+			20 * Math.sin(angle * Math.PI / 180));
+
 
 		renderer.render(scene, camera);
 		document.getElementById('info').innerText = 'angle = ' + angle.toFixed(2) + ' ' +
