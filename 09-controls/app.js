@@ -41,18 +41,6 @@
 	let shadowCameraHelper = new THREE.CameraHelper(spotLight.shadow.camera);
 	scene.add(shadowCameraHelper);
 
-	function render() {
-		lightHelper.update();
-		shadowCameraHelper.update();
-		renderer.render(scene, camera);
-	}
-
-	const controls = new THREE.OrbitControls(camera, renderer.domElement);
-	controls.addEventListener('change', render);
-	controls.minDistance = 2;
-	controls.maxDistance = 500;
-	controls.enablePan = false;
-
 	scene.add(new THREE.AxisHelper(1000));
 
 	const geometry = new THREE.BoxGeometry(3, 1, 0.2);
@@ -63,6 +51,18 @@
 	const geometryBox = new THREE.BoxGeometry(1, 1, 1);
 	var box = new THREE.Mesh(geometryBox, material);
 	scene.add(box);
+
+	const controls = new THREE.OrbitControls(camera, renderer.domElement);
+	controls.minDistance = 2;
+	controls.maxDistance = 500;
+	controls.enablePan = false;
+
+	function render() {
+		lightHelper.update();
+		shadowCameraHelper.update();
+		renderer.render(scene, camera);
+	}
+	controls.addEventListener('change', render);
 
 	render();
 })();
