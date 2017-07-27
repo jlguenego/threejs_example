@@ -52,17 +52,20 @@
 	var box = new THREE.Mesh(geometryBox, material);
 	scene.add(box);
 
+	// Added value: controls.
 	const controls = new THREE.OrbitControls(camera, renderer.domElement);
 	controls.minDistance = 2;
 	controls.maxDistance = 500;
 	controls.enablePan = false;
-
+	// We do a render function
 	function render() {
 		lightHelper.update();
 		shadowCameraHelper.update();
 		renderer.render(scene, camera);
 	}
+	// we link it to the controls.
 	controls.addEventListener('change', render);
 
+	// init
 	render();
 })();
