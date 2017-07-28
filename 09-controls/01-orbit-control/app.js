@@ -56,7 +56,7 @@
 	const controls = new THREE.OrbitControls(camera, renderer.domElement);
 	controls.minDistance = 2;
 	controls.maxDistance = 500;
-	controls.enablePan = false;
+	controls.enablePan = true;
 	// We do a render function
 	function render() {
 		lightHelper.update();
