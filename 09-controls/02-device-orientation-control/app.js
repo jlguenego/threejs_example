@@ -49,6 +49,8 @@
 			camera.aspect = window.innerWidth / window.innerHeight;
 			camera.updateProjectionMatrix();
 			renderer.setSize(window.innerWidth, window.innerHeight);
+			// on iphone the scroll needs to be done.
+			window.scroll(0, 0);
 		}, false);
 
 		animate();
