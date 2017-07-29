@@ -7,6 +7,8 @@
 	}
 
 	const renderer = new THREE.WebGLRenderer();
+	// add this to have a backgroundcolor
+	renderer.setClearColor(new THREE.Color('hsl(120, 100%, 95%)'));
 	document.body.prepend(renderer.domElement);
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.gammaOutput = true;
@@ -44,7 +46,7 @@
 		}
 	}
 
-	generate(20, 0, 0, 0, 10, 10, 10);
+	generate(5, 0, 0, 0, 10, 10, 10);
 
 	const controls = new THREE.OrbitControls(camera, renderer.domElement);
 	controls.minDistance = 2;
@@ -66,5 +68,14 @@
 		renderer.render(scene, camera);
 	}
 	animate();
+
+	window.addEventListener('resize', function() {
+		console.log('resize');
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		// on iphone the scroll needs to be done.
+		window.scroll(0, 0);
+	}, false);
 
 })();
